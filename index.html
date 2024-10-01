@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء فاتورة</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-box">
+        <h1>إنشاء فاتورة جديدة</h1>
+        <form id="invoiceForm">
+            <label for="invoiceType">نوع الفاتورة:</label>
+            <select id="invoiceType">
+                <option value="حجز">حجز</option>
+                <option value="شراء">شراء</option>
+                <option value="مشتريات">مشتريات</option>
+            </select>
+
+            <label for="customerName">اسم العميل:</label>
+            <input type="text" id="customerName" required>
+
+            <label for="invoiceDate">تاريخ الفاتورة:</label>
+            <input type="date" id="invoiceDate" required>
+
+            <label for="invoiceDetails">تفاصيل الفاتورة:</label>
+            <textarea id="invoiceDetails" required></textarea>
+
+            <label for="totalAmount">المبلغ الإجمالي:</label>
+            <input type="number" id="totalAmount" required>
+
+            <button type="submit">حفظ الفاتورة</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('invoiceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // البيانات التي سيتم إرسالها إلى السيرفر لحفظ الفاتورة
+            const invoiceData = {
+                type: document.getElementById('invoiceType').value,
+                customerName: document.getElementById('customerName').value,
+                date: document.getElementById('invoiceDate').value,
+                details: document.getElementById('invoiceDetails').value,
+                total: document.getElementById('totalAmount').value
+            };
+
+            // إرسال البيانات إلى السيرفر لحفظها
+            fetch('/saveInvoice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(invoiceData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('تم حفظ الفاتورة بنجاح');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
